@@ -1,0 +1,30 @@
+#!/usr/bin/env python -i
+
+import sys
+import os
+import argparse
+
+sys.path[0] = os.path.abspath(os.path.join(sys.path[0], '..'))
+os.chdir(sys.path[0])
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-e', '--environment', type=str, help='the same to specify NODE_ENV (default development)')
+args = parser.parse_args()
+
+
+env = args.environment or 'development';
+
+
+os.environ['FLASK_ENV'] = os.environ['FLASK_ENV'] if 'FLASK_ENV' in os.environ else env
+
+from config.app import Flask
+
+
+
+from config.boot import Boot
+Flask.app.config['debug'] = 'False'
+Flask.app.config.from_object(Flask.app.config)
+Flask.app.config.update(Flask.app.config)
+
+Boot.start()
